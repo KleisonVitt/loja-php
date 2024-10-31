@@ -34,6 +34,4 @@ class Produto
         $this->preco = $preco;
         $this->quantidadeEstoque = $quantidadeEstoque;
     }
-
-    // Getters e setters
 }

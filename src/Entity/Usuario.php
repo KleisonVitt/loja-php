@@ -1,23 +1,47 @@
 <?php
 
-class Usuario {
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
+#[ORM\Table(name: "usuario")]
+class Usuario
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private $id;
+
+    #[ORM\Column(type: "string", length: 255)]
     private $nome;
+
+    #[ORM\Column(type: "string", length: 255)]
     private $email;
+
+    #[ORM\Column(type: "string", length: 255)]
     private $senha;
-    private $dataCriacao;
+
+    #[ORM\Column(type: "string", length: 255)]
     private $telefone;
+
+    #[ORM\Column(type: "string", length: 255)]
     private $endereco;
+
+    #[ORM\Column(type: "string", length: 255)]
     private $cidade;
+
+    #[ORM\Column(type: "string", length: 255)]
     private $estado;
+
+    #[ORM\Column(type: "string", length: 255)]
     private $cep;
 
-    public function __construct($id, $nome, $email, $senha, $telefone = null, $endereco = null, $cidade = null, $estado = null, $cep = null) {
-        $this->id = $id;
+    public function __construct($nome, $email, $senha, $telefone = null, $endereco = null, $cidade = null, $estado = null, $cep = null)
+    {
         $this->nome = $nome;
         $this->email = $email;
-        $this->senha = password_hash($senha, PASSWORD_DEFAULT); // Criptografa a senha
-        $this->dataCriacao = date("Y-m-d H:i:s");
+        $this->senha = password_hash($senha, PASSWORD_DEFAULT);
         $this->telefone = $telefone;
         $this->endereco = $endereco;
         $this->cidade = $cidade;
@@ -26,39 +50,47 @@ class Usuario {
     }
 
     // Método para exibir informações do usuário
-    public function exibirInformacoes() {
-        return "ID: $this->id, Nome: $this->nome, Email: $this->email, Criado em: $this->dataCriacao";
+    public function toString()
+    {
+        return "ID: $this->id, Nome: $this->nome, Email: $this->email";
     }
 
     // Método para atualizar a senha
-    public function atualizarSenha($novaSenha) {
+    public function atualizarSenha($novaSenha)
+    {
         $this->senha = password_hash($novaSenha, PASSWORD_DEFAULT);
         return "Senha atualizada com sucesso.";
     }
 
     // Método para validar o formato do email
-    public function validarEmail() {
+    public function validarEmail()
+    {
         return filter_var($this->email, FILTER_VALIDATE_EMAIL) ? true : false;
     }
 
     // Getters e Setters para acessar e atualizar dados específicos
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getNome() {
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    public function setNome($nome) {
+    public function setNome($nome)
+    {
         $this->nome = $nome;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         if ($this->validarEmail()) {
             $this->email = $email;
         } else {
@@ -66,47 +98,53 @@ class Usuario {
         }
     }
 
-    public function getDataCriacao() {
-        return $this->dataCriacao;
-    }
-
-    public function getTelefone() {
+    public function getTelefone()
+    {
         return $this->telefone;
     }
 
-    public function setTelefone($telefone) {
+    public function setTelefone($telefone)
+    {
         $this->telefone = $telefone;
     }
 
-    public function getEndereco() {
+    public function getEndereco()
+    {
         return $this->endereco;
     }
 
-    public function setEndereco($endereco) {
+    public function setEndereco($endereco)
+    {
         $this->endereco = $endereco;
     }
 
-    public function getCidade() {
+    public function getCidade()
+    {
         return $this->cidade;
     }
 
-    public function setCidade($cidade) {
+    public function setCidade($cidade)
+    {
         $this->cidade = $cidade;
     }
 
-    public function getEstado() {
+    public function getEstado()
+    {
         return $this->estado;
     }
 
-    public function setEstado($estado) {
+    public function setEstado($estado)
+    {
         $this->estado = $estado;
     }
 
-    public function getCep() {
+    public function getCep()
+    {
         return $this->cep;
     }
 
-    public function setCep($cep) {
+    public function setCep($cep)
+    {
         $this->cep = $cep;
     }
 }

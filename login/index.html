@@ -1,11 +1,119 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="../assets/user.jpg" type="image/jpeg">
+    <title>Página de Login</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .obrigatorio {
+        color: red;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div
+      class="container-p container d-flex justify-content-center align-items-center min-vh-100"
+    >
+      <div class="card" style="width: 100%; max-width: 400px">
+        <div class="card-body">
+          <h5 class="card-title text-center">Login</h5>
+          <p class="text-center">Insira seus dados de conta</p>
+          <form id="login-form">
+            <div class="form-group">
+              <label for="email" class="form-label"
+                >E-mail <span class="obrigatorio">*</span></label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password" class="form-label"
+                >Senha <span class="obrigatorio">*</span></label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+              />
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary btn-block"
+              onclick="login()"
+            >
+              Entrar
+            </button>
+          </form>
+          <div class="text-center mt-3">
+            <a href="#">Esqueceu sua senha?</a>
+          </div>
+          <div class="text-center mt-2">
+            <p class="d-inline">Ainda não tem uma conta?</p>
+            <a href="../cadastro-usuario/" class="ml-1">Criar uma conta</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      function login() {
+        if (!validarCampos()) {
+          return;
+        }
+
+        var formData = new FormData(document.getElementById('login-form'));
+
+        $.ajax({
+          url: 'login_usuario.php',
+          type: 'post',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            if (response.includes('sucesso')) {
+              window.location.href = '../home/search_usuario.php';
+            } else {
+              console.error(response);
+            }
+          },
+          error: function (xhr, status, error) {
+            alert('Erro ao fazer login');
+            console.log('Erro ao fazer login: ' + error);
+          }
+        });
+      }
+
+      function validarCampos() {
+        var email = document.getElementById('email');
+        var senha = document.getElementById('password');
+
+        if (email.value == '') {
+          email.focus();
+          return false;
+        }
+
+        if (senha.value == '') {
+          senha.focus();
+          return false;
+        }
+
+        return true;
+      }
+    </script>
+  </body>
 </html>
