@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro de Cliente</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="shortcut icon" href="../assets/user.jpg" type="image/jpeg">
+</head>
+
+<body>
+  <div class="container-cadastro px-4">
+    <h2 class="text-center mb-4">Cadastro de Cliente</h2>
+    <form id="cadastro-form" enctype="multipart/form-data">
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <label for="nome" class="form-label">Nome: <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="nome" name="nome" required placeholder="Seu nome" />
+        </div>
+        <div class="col-md-6">
+          <label for="sobrenome" class="form-label">Sobrenome: <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="sobrenome" name="sobrenome" required
+            placeholder="Seu sobrenome" />
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <label for="cpf" class="form-label">CPF: <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="cpf" name="cpf" required placeholder="000.000.000-00"
+            oninput="mascaraCpf(this)" />
+        </div>
+        <div class="col-md-6">
+          <label for="rg" class="form-label">RG:</label>
+          <input type="text" class="form-control" id="rg" name="rg" required placeholder="00.000.000-0"
+            oninput="mascaraRg(this)" />
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <label for="email" class="form-label">E-mail: <span class="text-danger">*</span></label>
+          <input type="email" class="form-control" id="email" name="email" required placeholder="seuemail@gmail.com" />
+        </div>
+        <div class="col-md-6">
+          <label for="telefone" class="form-label">Telefone:</label>
+          <input type="text" class="form-control" id="telefone" name="telefone" required placeholder="(99) 99999-9999"
+            oninput="mascaraFone(this)" />
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <label for="senha" class="form-label">Senha: <span class="text-danger">*</span></label>
+          <input type="password" class="form-control" id="senha" name="senha" required placeholder="4+ characters" />
+        </div>
+        <div class="col-md-6">
+          <label for="confir-senha" class="form-label">Confirmar Senha: <span class="text-danger">*</span></label>
+          <input type="password" class="form-control" id="confir-senha" name="confir-senha" required
+            placeholder="4+ characters" />
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <label for="cep" class="form-label">CEP <span class="text-danger">*</span></label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="cep" name="cep" required placeholder="00000-000"
+              oninput="mascaraCep(this)" />
+            <button class="btn btn-primary" type="button" onclick="consultaCEP()">
+              Buscar CEP
+            </button>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="endereco" class="form-label">Endereço: <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="endereco" name="endereco" required placeholder="Rua das Flores" />
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <label for="numero" class="form-label">Número:</label>
+          <input type="text" class="form-control" id="numero" name="numero" placeholder="123" />
+        </div>
+        <div class="col-md-6">
+          <label for="bairro" class="form-label">Bairro:</label>
+          <input type="text" class="form-control" id="bairro" name="bairro" required placeholder="Centro" />
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <label for="cidade" class="form-label">Cidade:</label>
+          <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Juiz de Fora"/>
+        </div>
+        <div class="col-md-6">
+          <label for="estado" class="form-label">Estado:</label>
+          <input type="text" class="form-control" id="estado" name="estado" placeholder="Minas Gerais"/>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="imagem" class="form-label">Foto de Perfil</label>
+        <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*" />
+      </div>
+
+      <button type="button" class="btn btn-success w-100 mb-3" id="cadastro-button" onclick="cadastrar()">
+        Cadastrar
+      </button>
+
+      <div class="text-center">
+        <p class="d-inline-block mb-2">Já possui uma conta?</p>
+        <a style="margin-left: 5px" href="../login/index.html">Entrar</a>
+      </div>
+
+      <div id="result" class="text-danger text-center mt-2"></div>
+    </form>
+  </div>
+
+  <script type="text/javascript">
+    function consultaCEP() {
+      var cep = document.getElementById('cep');
+
+      url = 'https://viacep.com.br/ws/' + cep.value + '/json/';
+      fetch(url)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          document.getElementById('cidade').value = result.localidade;
+          document.getElementById('estado').value = result.estado;
+        })
+        .catch(error => {
+          alert('CEP não encontrado');
+        });
+    }
+
+    function cadastrar() {
+      if (!validarCampos()) {
+        return;
+      }
+
+      var formData = new FormData(document.getElementById('cadastro-form'));
+
+      $.ajax({
+        url: 'cadastro_usuario.php',
+        type: 'post',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if (response.includes('sucesso')) {
+            window.location.href = '../login/index.html';
+          } else {
+            console.log(response);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.log('Erro ao cadastrar: ' + error);
+        }
+      });
+    }
+
+    function validarCampos() {
+      var nome = document.getElementById('nome');
+      var sobrenome = document.getElementById('sobrenome');
+      var cpf = document.getElementById('cpf');
+      var rg = document.getElementById('rg');
+      var email = document.getElementById('email');
+      var telefone = document.getElementById('telefone');
+      var senha = document.getElementById('senha');
+      var confirSenha = document.getElementById('confir-senha');
+      var cep = document.getElementById('cep');
+      var endereco = document.getElementById('endereco');
+      var numero = document.getElementById('numero');
+      var bairro = document.getElementById('bairro');
+      var cidade = document.getElementById('cidade');
+      var estado = document.getElementById('estado');
+      var imagem = document.getElementById('imagem');
+
+      if (nome.value == '') {
+        nome.focus();
+        return false;
+      }
+
+      if (sobrenome.value == '') {
+        sobrenome.focus();
+        return false;
+      }
+
+      if (cpf.value == '') {
+        cpf.focus();
+        return false;
+      }
+
+      if (rg.value == '') {
+        rg.focus();
+        return false;
+      }
+
+      if (email.value == '') {
+        email.focus();
+        return false;
+      }
+      if (telefone.value == '') {
+        telefone.focus();
+        return false;
+      }
+
+      if (senha.value == '') {
+        senha.focus();
+        return false;
+      }
+
+      if (confirSenha.value == '') {
+        confirSenha.focus();
+        return false;
+      }
+
+      if (senha.value != confirSenha.value) {
+        alert('Senhas não conferem');
+        senha.focus();
+        return false;
+      }
+
+      if (cep.value == '') {
+        cep.focus();
+        return false;
+      }
+
+      if (endereco.value == '') {
+        endereco.focus();
+        return false;
+      }
+
+      if (cidade.value == '') {
+        cidade.focus();
+        return false;
+      }
+
+      if (estado.value == '') {
+        estado.focus();
+        return false;
+      }
+
+      return true;
+    }
+
+    function mascaraCpf(i) {
+      var v = i.value;
+
+      if (isNaN(v[v.length - 1])) {
+        // impede entrar outro caractere que não seja número
+        i.value = v.substring(0, v.length - 1);
+        return;
+      }
+
+      i.setAttribute('maxlength', '14');
+      if (v.length == 3 || v.length == 7) i.value += '.';
+      if (v.length == 11) i.value += '-';
+    }
+
+    function mascaraRg(i) {
+      var v = i.value;
+
+      if (isNaN(v[v.length - 1])) {
+        // impede entrar outro caractere que não seja número
+        i.value = v.substring(0, v.length - 1);
+        return;
+      }
+
+      i.setAttribute('maxlength', '12');
+      if (v.length == 2 || v.length == 6) i.value += '.';
+      if (v.length == 10) i.value += '-';
+    }
+
+    function mascaraFone(i) {
+      var v = i.value;
+
+      // Remove todos os caracteres que não sejam números
+      v = v.replace(/\D/g, "");
+
+      // Limita o número de caracteres a 11 dígitos
+      if (v.length > 11) {
+        v = v.substring(0, 11);
+      }
+
+      // Aplica a formatação condicionalmente
+      if (v.length > 0) {
+        v = "(" + v;
+      }
+      if (v.length > 3) {
+        v = v.substring(0, 3) + ") " + v.substring(3);
+      }
+      if (v.length > 9) {
+        v = v.substring(0, 9) + "-" + v.substring(9);
+      }
+
+      // Atualiza o valor do input
+      i.value = v;
+    }
+
+    function mascaraCep(i) {
+      var v = i.value;
+
+      // Impede a inserção de caracteres que não sejam números
+      if (isNaN(v[v.length - 1])) {
+        i.value = v.substring(0, v.length - 1);
+        return;
+      }
+
+      i.setAttribute('maxlength', '9');
+      if (v.length == 5) i.value += '-';
+    }
+  </script>
+</body>
+
+</html>

@@ -1,7 +1,7 @@
 {
     "require": {
-        "doctrine/orm": "^2.5",
-        "symfony/cache": "^3.4",
-        "doctrine/annotations": "^1.4"
+        "doctrine/orm": "^3.2",
+        "symfony/cache": "^7.1",
+        "doctrine/annotations": "^2.0"
     }
 }
