@@ -1,19 +1,25 @@
 <?php
-    use Doctrine\ORM\ORMSetup;
-    use Doctrine\ORM\EntityManager;
-    use Doctrine\DBAL\DriverManager;
+// config/dbconn.php
 
-    require_once __DIR__ . '/../vendor/autoload.php';
+use Doctrine\ORM\ORMSetup;
+use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\DriverManager;
 
-    $isDevMode = true;
-    $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/../src/Entity'], $isDevMode);
+require_once __DIR__ . '/../vendor/autoload.php';
 
-    $conn = [
-        'dbname' => 'loja',
-        'user' => 'root',
-        'password' => '',
-        'host' => 'localhost:3307',
-        'driver' => 'pdo_mysql'
-    ];
+$isDevMode = true;
+$config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/../src/Entity'], $isDevMode);
 
-    $entityManager = new EntityManager(DriverManager::getConnection($conn, $config), $config);
+$conn = [
+    'dbname' => 'loja',
+    'user' => 'root',
+    'password' => '',
+    'host' => 'localhost:3307',
+    'driver' => 'pdo_mysql'
+];
+
+// Criação do EntityManager
+$entityManager = new EntityManager(DriverManager::getConnection($conn, $config), $config);
+
+// Retorna o EntityManager para ser usado em outros arquivos
+return $entityManager;

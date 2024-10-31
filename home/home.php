@@ -1,0 +1,2 @@
+<?php
+// /home/home.php

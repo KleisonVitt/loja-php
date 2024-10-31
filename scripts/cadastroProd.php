@@ -1,9 +1,29 @@
 <?php
-require_once __DIR__ . '/../config/db-config.php';
-require "/../src/Entity/Produto.php";
+// /scripts/cadastroProd.php
+
+require __DIR__ . '/../vendor/autoload.php';
+$entityManager = require __DIR__ . '/../config/dbconn.php';
 
 use App\Entity\Produto;
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = $_POST['nome'] ?? '';
+    $descricao = $_POST['descricao'] ?? '';
+    $preco = $_POST['preco'] ?? 0;
+    $quantidadeEstoque = $_POST['quantidade'] ?? 0;
+
+    // Cria uma nova instância de Produto
+    $produto = new Produto($nome, $descricao, $preco, $quantidadeEstoque);
+
+    // Persiste e salva o produto no banco de dados
+    $entityManager->persist($produto);
+    $entityManager->flush();
+
+    echo "Produto cadastrado com sucesso!";
+}
+?>
+
+<?php
 // // Criando um novo produto
 // $prod = new Produto();
 // $prod->setNome("Sprite");
@@ -16,24 +36,7 @@ use App\Entity\Produto;
 
 // echo "Produto criado com ID " . $prod->getId() . "\n";
 
-
-public function salvarProduto(string $nome, string $descricao, float $preco, int $quantidadeEstoque): Produto
-    {
-        // Criando uma nova instÃ¢ncia de Produto
-        $produto = new Produto();
-        $produto->setNome($nome);
-        $produto->setDescricao($descricao);
-        $produto->setPreco($preco);
-        $produto->setQuantidadeEstoque($quantidadeEstoque);
-
-        // Persistindo a entidade no banco de dados
-        $this->entityManager->persist($produto);
-        $this->entityManager->flush();
-
-        return $produto;
-    }
-
-//     <?php
+// 
 //     require_once __DIR__ . '/../config/db-config.php';
 // require "/../src/Entity/Produto.php";
 // require "/../src/Repository/ProdutoRepository.php";
