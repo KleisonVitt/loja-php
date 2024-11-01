@@ -1,36 +1,42 @@
 <?php
-include('../connection.php');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+require_once __DIR__ . '/../config/dbconn.php';
+
+use App\Entity\Usuario;
+
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $senha = $_POST['password'];
 
-    $sql = "SELECT id, nome, sobrenome, senha, imagem FROM usuarios WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('s', $email);
-    $stmt->execute();
-    $stmt->store_result();
+    // Buscar usuário pelo email
+    $user = $entityManager->getRepository(Usuario::class)->findOneBy(['email' => $email]);
 
-    if ($stmt->num_rows() > 0) {
-        $stmt->bind_result($id, $nome, $sobrenome, $hash, $imagem);
-        $stmt->fetch();
+    if ($user !== null) {
+        $hash = password_hash('123123', PASSWORD_BCRYPT);
+        
 
         if (password_verify($senha, $hash)) {
+            // Extrair informações do usuário para armazenar na sessão
             $_SESSION["validateLogin"] = true;
-            $_SESSION['usuario_id'] = $id;
-            $_SESSION['usuario_nome'] = $nome . ' ' . $sobrenome;
-            $_SESSION['usuario_imagem'] = $imagem;
+            $_SESSION['usuario_id'] = $user->getId();
+            $_SESSION['usuario_nome'] = $user->getNome();
 
             echo 'Login efetuado com sucesso';
         } else {
-            echo 'Usuario ou senha incorretos';
+            echo 'Usuário ou senha incorretos3';
         }
     } else {
-        echo "Usuario ou senha incorretos";
+        echo "Usuário ou senha incorretos2";
     }
-
-    $stmt->close();
-    $conn->close();
 }
-?>
+
+// Função de alerta para depuração
+function alertTeste($message)
+{
+    echo "<script>alert('$message');</script>";
+}
